@@ -23,7 +23,6 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { User } from './modules/users/entities/user.entity';
 import { Property } from './modules/properties/entities/property.entity';
 import { PropertyImage } from './modules/properties/entities/property-image.entity';
-import { User as AuthUser } from './modules/auth/entities/auth.entity';
 
 @Module({
   imports: [
@@ -41,7 +40,7 @@ import { User as AuthUser } from './modules/auth/entities/auth.entity';
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User, Property, PropertyImage, AuthUser],
+        entities: [User, Property, PropertyImage],
         synchronize: configService.get('DB_SYNCHRONIZE') === 'true',
         logging: configService.get('DB_LOGGING') === 'true',
       }),
@@ -63,8 +62,9 @@ import { User as AuthUser } from './modules/auth/entities/auth.entity';
       isGlobal: true,
       imports: [ConfigModule],
       inject: [ConfigService],
+      // @ts-ignore - cache-manager-redis-store type compatibility
       useFactory: async (configService: ConfigService) => ({
-        store: redisStore,
+        store: redisStore as any,
         host: configService.get('REDIS_HOST'),
         port: configService.get('REDIS_PORT'),
         password: configService.get('REDIS_PASSWORD'),
