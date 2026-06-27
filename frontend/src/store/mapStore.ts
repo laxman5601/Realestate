@@ -11,6 +11,7 @@ interface MapStore {
 
   // Heatmap state
   heatmapType: 'price' | 'demand' | 'density'
+  heatmap: boolean
 
   // Isochrone state
   isochroneMode: boolean
@@ -186,6 +187,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
   visibleLayers: { properties: true },
   layers: new Map(),
   heatmapType: 'price',
+  heatmap: false,
   isochroneMode: false,
   isochroneTime: 30,
   transitType: 'all',
@@ -270,6 +272,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
 
   toggleHeatmap: () =>
     set((state) => ({
+      heatmap: !state.heatmap,
       visibleLayers: {
         ...state.visibleLayers,
         heatmap: !state.visibleLayers.heatmap,
