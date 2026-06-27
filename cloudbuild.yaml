@@ -1,0 +1,39 @@
+options:
+  substitution_option: ALLOW_LOOSE
+substitutions:
+  _REGION: us-central1
+  _REPO: realestate-repo
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: build-backend
+    dir: backend
+    args:
+      - build
+      - -t
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA'
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    id: build-frontend
+    dir: frontend
+    args:
+      - build
+      - -t
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA'
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    id: push-backend
+    args:
+      - push
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA'
+
+  - name: gcr.io/cloud-builders/docker
+    id: push-frontend
+    args:
+      - push
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA'
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA'
