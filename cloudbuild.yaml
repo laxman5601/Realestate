@@ -1,39 +1,98 @@
 options:
+  logging: CLOUD_LOGGING_ONLY
   substitution_option: ALLOW_LOOSE
+
 substitutions:
-  _REGION: us-central1
+  _REGION: asia-south1
   _REPO: realestate-repo
+  _BACKEND_SERVICE: realestate-backend
+  _FRONTEND_SERVICE: realestate-frontend
+
 steps:
-  - name: gcr.io/cloud-builders/docker
-    id: build-backend
-    dir: backend
-    args:
-      - build
-      - -t
-      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA'
-      - .
 
-  - name: gcr.io/cloud-builders/docker
-    id: build-frontend
-    dir: frontend
-    args:
-      - build
-      - -t
-      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA'
-      - .
+# ========================
+# BUILD BACKEND
+# ========================
+- name: gcr.io/cloud-builders/docker
+  id: build-backend
+  dir: backend
+  args:
+    - build
+    - -t
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
+    - .
 
-  - name: gcr.io/cloud-builders/docker
-    id: push-backend
-    args:
-      - push
-      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA'
+# ========================
+# BUILD FRONTEND
+# ========================
+- name: gcr.io/cloud-builders/docker
+  id: build-frontend
+  dir: frontend
+  args:
+    - build
+    - -t
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
+    - .
 
-  - name: gcr.io/cloud-builders/docker
-    id: push-frontend
-    args:
-      - push
-      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA'
+# ========================
+# PUSH BACKEND
+# ========================
+- name: gcr.io/cloud-builders/docker
+  id: push-backend
+  args:
+    - push
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
 
+# ========================
+# PUSH FRONTEND
+# ========================
+- name: gcr.io/cloud-builders/docker
+  id: push-frontend
+  args:
+    - push
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
+
+# ========================
+# DEPLOY BACKEND (PROD)
+# ========================
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  id: deploy-backend
+  entrypoint: gcloud
+  args:
+    - run
+    - deploy
+    - ${_BACKEND_SERVICE}
+    - --image
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
+    - --region
+    - ${_REGION}
+    - --platform
+    - managed
+    - --allow-unauthenticated
+    - --quiet
+
+# ========================
+# DEPLOY FRONTEND (PROD)
+# ========================
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  id: deploy-frontend
+  entrypoint: gcloud
+  args:
+    - run
+    - deploy
+    - ${_FRONTEND_SERVICE}
+    - --image
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
+    - --region
+    - ${_REGION}
+    - --platform
+    - managed
+    - --allow-unauthenticated
+    - --quiet
+
+# ========================
+# OUTPUT IMAGES
+# ========================
 images:
-  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA'
-  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA'
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
