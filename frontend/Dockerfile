@@ -7,6 +7,8 @@ RUN if [ -f package-lock.json ]; then \
       npm ci --silent; \
     else \
       npm install --legacy-peer-deps --silent; \
+    fi
+
 FROM node:20-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
