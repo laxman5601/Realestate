@@ -251,7 +251,6 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
   }
-}
 
     /* Mobile map optimizations */
     .map-container {
@@ -291,10 +290,8 @@
       margin-top: env(safe-area-inset-top);
       margin-bottom: env(safe-area-inset-bottom);
     }
-  }
 
   /* Performance optimizations for mobile */
-  @media (max-width: 768px) {
     /* Reduce animations on low-end devices */
     @media (prefers-reduced-motion: no-preference) {
       .animate-on-scroll {
