@@ -19,7 +19,7 @@ steps:
   args:
     - build
     - -t
-    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$COMMIT_SHA
     - .
 
 # ========================
@@ -31,7 +31,7 @@ steps:
   args:
     - build
     - -t
-    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$COMMIT_SHA
     - .
 
 # ========================
@@ -41,7 +41,7 @@ steps:
   id: push-backend
   args:
     - push
-    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$COMMIT_SHA
 
 # ========================
 # PUSH FRONTEND
@@ -50,7 +50,7 @@ steps:
   id: push-frontend
   args:
     - push
-    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$COMMIT_SHA
 
 # ========================
 # DEPLOY BACKEND (PROD)
@@ -63,7 +63,7 @@ steps:
     - deploy
     - ${_BACKEND_SERVICE}
     - --image
-    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$COMMIT_SHA
     - --region
     - ${_REGION}
     - --platform
@@ -82,7 +82,7 @@ steps:
     - deploy
     - ${_FRONTEND_SERVICE}
     - --image
-    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$COMMIT_SHA
     - --region
     - ${_REGION}
     - --platform
@@ -94,5 +94,5 @@ steps:
 # OUTPUT IMAGES
 # ========================
 images:
-  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$SHORT_SHA
-  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$SHORT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/backend:$COMMIT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:$COMMIT_SHA
