@@ -109,7 +109,7 @@ export class PropertiesController {
     @Query('radiusKm') radiusKm = 5,
   ) {
     const property = await this.propertiesService.findOne(propertyId);
-    return await this.propertiesService.getNearbyCom mitities(
+    return await this.propertiesService.getNearbyCommities(
       property.latitude,
       property.longitude,
       radiusKm,

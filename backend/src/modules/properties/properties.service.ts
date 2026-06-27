@@ -177,7 +177,7 @@ export class PropertiesService {
     await this.propertyRepository.save(property);
   }
 
-  async getNearbyCom mitities(latitude: number, longitude: number, radiusKm: number) {
+  async getNearbyCommities(latitude: number, longitude: number, radiusKm: number) {
     // This will be called by geospatial service
     return await this.propertyRepository.query(`
       SELECT 
