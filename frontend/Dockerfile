@@ -1,7 +1,12 @@
 FROM node:20-slim AS deps
 WORKDIR /app
 COPY package.json ./
-RUN npm install
+# Prefer `npm ci` for reproducible builds when lockfile exists. Fall back to legacy peer deps otherwise.
+RUN if [ -f package-lock.json ]; then \
+			npm ci --omit=dev --silent; \
+		else \
+			npm install --legacy-peer-deps --omit=dev --silent; \
+		fi
 
 FROM node:20-slim AS builder
 WORKDIR /app

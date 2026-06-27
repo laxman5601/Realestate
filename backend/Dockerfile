@@ -9,7 +9,13 @@ RUN apk add --no-cache python3 make g++
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+# Prefer `npm ci` when a lockfile is present for reproducible builds.
+# Use `--legacy-peer-deps` to avoid peer dependency resolution failures in Cloud Build
+RUN if [ -f package-lock.json ]; then \
+      npm ci --ignore-scripts; \
+    else \
+      npm install --legacy-peer-deps --ignore-scripts; \
+    fi
 
 # Copy application code
 COPY . .
