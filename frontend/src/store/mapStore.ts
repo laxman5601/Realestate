@@ -20,11 +20,13 @@ interface MapStore {
   // Transit state
   transitType: 'all' | 'bus' | 'subway' | 'train'
   showTransitDistance: boolean
+  transit: boolean
 
   // Advanced Analytics state
   analyticsType: 'walkability' | 'pricePrediction' | 'marketTrends' | 'neighborhood'
   analyticsOpacity: number // 0-1
   showAnalyticsLabels: boolean
+  analytics: boolean
 
   // Amenities/Infrastructure
   selectedAmenities: string[]
@@ -102,9 +104,11 @@ interface MapStore {
   updateSelectedAmenities: (amenities: string[]) => void
   setTransitType: (type: 'all' | 'bus' | 'subway' | 'train') => void
   toggleTransitDistance: () => void
+  toggleTransit: () => void
   setAnalyticsType: (type: 'walkability' | 'pricePrediction' | 'marketTrends' | 'neighborhood') => void
   setAnalyticsOpacity: (opacity: number) => void
   toggleAnalyticsLabels: () => void
+  toggleAnalytics: () => void
   resetMap: () => void
   fitBounds: (minLat: number, maxLat: number, minLon: number, maxLon: number) => void
 
@@ -192,9 +196,11 @@ export const useMapStore = create<MapStore>((set, get) => ({
   isochroneTime: 30,
   transitType: 'all',
   showTransitDistance: true,
+  transit: false,
   analyticsType: 'walkability',
   analyticsOpacity: 0.7,
   showAnalyticsLabels: true,
+  analytics: false,
   selectedAmenities: [],
 
   // Enhanced Mobile defaults
@@ -306,6 +312,15 @@ export const useMapStore = create<MapStore>((set, get) => ({
       showTransitDistance: !state.showTransitDistance,
     })),
 
+  toggleTransit: () =>
+    set((state) => ({
+      transit: !state.transit,
+      visibleLayers: {
+        ...state.visibleLayers,
+        transit: !state.visibleLayers.transit,
+      },
+    })),
+
   setAnalyticsType: (type: 'walkability' | 'pricePrediction' | 'marketTrends' | 'neighborhood') =>
     set({ analyticsType: type }),
 
@@ -317,18 +332,30 @@ export const useMapStore = create<MapStore>((set, get) => ({
       showAnalyticsLabels: !state.showAnalyticsLabels,
     })),
 
+  toggleAnalytics: () =>
+    set((state) => ({
+      analytics: !state.analytics,
+      visibleLayers: {
+        ...state.visibleLayers,
+        analytics: !state.visibleLayers.analytics,
+      },
+    })),
+
   resetMap: () =>
     set({
       viewport: defaultViewport,
       visibleLayers: { properties: true },
       heatmapType: 'price',
+      heatmap: false,
       isochroneMode: false,
       isochroneTime: 30,
       transitType: 'all',
       showTransitDistance: true,
+      transit: false,
       analyticsType: 'walkability',
       analyticsOpacity: 0.7,
       showAnalyticsLabels: true,
+      analytics: false,
       selectedAmenities: [],
     }),
 
