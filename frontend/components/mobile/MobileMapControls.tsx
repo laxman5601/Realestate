@@ -33,7 +33,7 @@ const MobileMapControls: React.FC<MobileMapControlsProps> = ({
 }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const {
-    layers,
+    visibleLayers,
     toggleLayer,
     heatmap,
     toggleHeatmap,
@@ -81,9 +81,9 @@ const MobileMapControls: React.FC<MobileMapControlsProps> = ({
       icon: Home,
       color: 'text-blue-600',
       layers: [
-        { id: 'properties', name: 'All Properties', active: layers.properties },
-        { id: 'forSale', name: 'For Sale', active: layers.forSale },
-        { id: 'forRent', name: 'For Rent', active: layers.forRent }
+        { id: 'properties', name: 'All Properties', active: visibleLayers.properties || false },
+        { id: 'forSale', name: 'For Sale', active: visibleLayers.forSale || false },
+        { id: 'forRent', name: 'For Rent', active: visibleLayers.forRent || false }
       ]
     },
     {
@@ -92,9 +92,9 @@ const MobileMapControls: React.FC<MobileMapControlsProps> = ({
       icon: Bus,
       color: 'text-green-600',
       layers: [
-        { id: 'transit', name: 'Public Transit', active: transit.enabled },
-        { id: 'commute', name: 'Commute Zones', active: layers.commute },
-        { id: 'parking', name: 'Parking', active: layers.parking }
+        { id: 'transit', name: 'Public Transit', active: transit || false },
+        { id: 'commute', name: 'Commute Zones', active: visibleLayers.commute || false },
+        { id: 'parking', name: 'Parking', active: visibleLayers.parking || false }
       ]
     },
     {
@@ -103,10 +103,10 @@ const MobileMapControls: React.FC<MobileMapControlsProps> = ({
       icon: ShoppingBag,
       color: 'text-orange-600',
       layers: [
-        { id: 'schools', name: 'Schools', active: layers.schools },
-        { id: 'groceries', name: 'Groceries', active: layers.groceries },
-        { id: 'hospitals', name: 'Hospitals', active: layers.hospitals },
-        { id: 'restaurants', name: 'Restaurants', active: layers.restaurants }
+        { id: 'schools', name: 'Schools', active: visibleLayers.schools || false },
+        { id: 'groceries', name: 'Groceries', active: visibleLayers.groceries || false },
+        { id: 'hospitals', name: 'Hospitals', active: visibleLayers.hospitals || false },
+        { id: 'restaurants', name: 'Restaurants', active: visibleLayers.restaurants || false }
       ]
     },
     {
@@ -115,9 +115,9 @@ const MobileMapControls: React.FC<MobileMapControlsProps> = ({
       icon: Thermometer,
       color: 'text-red-600',
       layers: [
-        { id: 'heatmap', name: 'Price Heatmap', active: heatmap.enabled },
-        { id: 'analytics', name: 'Analytics', active: analytics.enabled },
-        { id: 'demographics', name: 'Demographics', active: layers.demographics }
+        { id: 'heatmap', name: 'Price Heatmap', active: heatmap || false },
+        { id: 'analytics', name: 'Analytics', active: analytics || false },
+        { id: 'demographics', name: 'Demographics', active: visibleLayers.demographics || false }
       ]
     }
   ]
