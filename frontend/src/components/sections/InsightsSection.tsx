@@ -1,6 +1,6 @@
 'use client'
 
-import { BarChart2, TrendUp, Compass } from 'lucide-react'
+import { BarChart2, TrendingUp, Compass } from 'lucide-react'
 
 const insights = [
   {
