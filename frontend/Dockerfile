@@ -2,12 +2,11 @@ FROM node:20-slim AS deps
 WORKDIR /app
 COPY package.json ./
 # Prefer `npm ci` for reproducible builds when lockfile exists. Fall back to legacy peer deps otherwise.
+# Note: Keep dev dependencies in deps stage since Next.js build needs them (TypeScript, toolchain, etc)
 RUN if [ -f package-lock.json ]; then \
-			npm ci --omit=dev --silent; \
-		else \
-			npm install --legacy-peer-deps --omit=dev --silent; \
-		fi
-
+      npm ci --silent; \
+    else \
+      npm install --legacy-peer-deps --silent; \
 FROM node:20-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
