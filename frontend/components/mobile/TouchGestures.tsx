@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useRef, useCallback } from 'react'
-import { useMapStore } from '@/store/mapStore'
 
 interface TouchGesturesProps {
   onSwipeLeft?: () => void
@@ -29,7 +28,6 @@ const TouchGestures: React.FC<TouchGesturesProps> = ({
   const touchesRef = useRef<Map<number, TouchPoint>>(new Map())
   const lastTapRef = useRef<{ x: number; y: number; time: number } | null>(null)
   const longPressTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const { mapInstance } = useMapStore()
 
   // Gesture configuration
   const config = {
