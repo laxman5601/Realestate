@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useMapStore } from '@/stores/mapStore'
-import { useSearchStore } from '@/stores/searchStore'
+import { useMapStore } from '@/store/mapStore'
+import { useSearchStore } from '@/store/searchStore'
 import { isMobileDevice, triggerHapticFeedback } from '@/lib/mobileUtils'
 
 // Import all advanced mobile components

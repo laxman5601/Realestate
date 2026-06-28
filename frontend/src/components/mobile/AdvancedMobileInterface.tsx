@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Property } from '@/types'
-import { useMapStore } from '@/stores/mapStore'
-import { useSearchStore } from '@/stores/searchStore'
+import { useMapStore } from '@/store/mapStore'
+import { useSearchStore } from '@/store/searchStore'
 import { isMobileDevice, triggerHapticFeedback } from '@/lib/mobileUtils'
 
 // Import advanced mobile components
