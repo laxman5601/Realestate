@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { LngLatBounds, LngLat } from 'maplibre-gl'
 import { isMobileDevice } from '@/lib/mobileUtils'
+import { useMapLibre } from '@/components/maps/MapLibreProvider'
 
 export interface OfflineRegion {
   id: string
@@ -18,16 +19,19 @@ export interface OfflineRegion {
 }
 
 interface OfflineMapManagerProps {
-  mapInstance: any // MapLibre GL map instance
+  isEnabled: boolean
+  userLocation?: { latitude: number; longitude: number }
   onRegionUpdate?: (region: OfflineRegion) => void
   onDownloadProgress?: (regionId: string, progress: number) => void
 }
 
 const OfflineMapManager: React.FC<OfflineMapManagerProps> = ({
-  mapInstance,
+  isEnabled,
+  userLocation,
   onRegionUpdate,
   onDownloadProgress
 }) => {
+  const { map } = useMapLibre()
   const [regions, setRegions] = useState<OfflineRegion[]>([])
   const [isOnline, setIsOnline] = useState(true)
   const [storageQuota, setStorageQuota] = useState({ used: 0, available: 0 })
@@ -169,7 +173,11 @@ const OfflineMapManager: React.FC<OfflineMapManagerProps> = ({
       await saveRegion(region)
 
       // Get tile URLs from map
-      const source = mapInstance.getSource('maplibre')
+      if (!map) {
+        throw new Error('Map instance is not available')
+      }
+
+      const source = map.getSource('maplibre')
       if (!source) {
         throw new Error('Map source not found')
       }
@@ -359,10 +367,10 @@ const OfflineMapManager: React.FC<OfflineMapManagerProps> = ({
 
   // Create region from current view
   const createRegionFromView = useCallback(() => {
-    if (!mapInstance) return
+    if (!map) return
 
-    const bounds = mapInstance.getBounds()
-    const zoom = Math.round(mapInstance.getZoom())
+    const bounds = map.getBounds()
+    const zoom = Math.round(map.getZoom())
     const regionId = `region_${Date.now()}`
 
     const zoomLevels: [number, number] = isMobileDevice()
@@ -384,18 +392,13 @@ const OfflineMapManager: React.FC<OfflineMapManagerProps> = ({
     return bounds
   }, [])
 
-  return {
-    regions,
-    isOnline,
-    storageQuota,
-    isDownloading,
-    downloadTilesForRegion,
-    removeRegion,
-    clearExpiredTiles,
-    createRegionFromView,
-    getRegionForLocation,
-    getOfflineTile
+  if (!isEnabled) {
+    return null
   }
+
+  return (
+    <div className="hidden" />
+  )
 }
 
 export default OfflineMapManager
