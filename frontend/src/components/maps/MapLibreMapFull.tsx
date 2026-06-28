@@ -15,6 +15,18 @@ import {
   getScoreColor
 } from '@/lib/analyticsService'
 import { isMobileDevice, getOptimalMapZoom, supportsWebGL } from '@/lib/mobileUtils'
+
+interface MapLibreMapProps {
+  properties?: Property[]
+  onPropertyClick?: (propertyId: string) => void
+  showHeatmap?: boolean
+  showIsochrone?: boolean
+  showTransit?: boolean
+  showAmenities?: boolean
+  center?: [number, number]
+  zoom?: number
+}
+
 export function MapLibreMap({
   properties,
   onPropertyClick,
