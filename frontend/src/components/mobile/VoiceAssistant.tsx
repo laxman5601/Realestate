@@ -13,12 +13,16 @@ interface VoiceCommand {
 }
 
 interface VoiceAssistantProps {
+  onCommand?: (command: VoiceCommand) => void
+  onClose?: () => void
   onCommandExecuted?: (command: VoiceCommand) => void
   onSpeechResult?: (transcript: string, isFinal: boolean) => void
   onError?: (error: string) => void
 }
 
 const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
+  onCommand,
+  onClose,
   onCommandExecuted,
   onSpeechResult,
   onError
@@ -148,6 +152,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       const voiceCommand = parseVoiceCommand(command.toLowerCase().trim())
 
       if (voiceCommand) {
+        onCommand?.(voiceCommand)
         await executeVoiceCommand(voiceCommand)
         onCommandExecuted?.(voiceCommand)
 
@@ -409,16 +414,53 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
     // For now, it's triggered by explicit start
   }, [isSupported, speak, startListening])
 
-  return {
-    isListening,
-    isProcessing,
-    transcript,
-    isSupported,
-    startListening,
-    stopListening,
-    toggleListening,
-    speak
-  }
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 pointer-events-none">
+      <div className="w-full max-w-md rounded-3xl bg-white/95 border border-slate-200 shadow-2xl p-4 pointer-events-auto">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-base font-semibold text-slate-900">Voice Assistant</div>
+          {onClose ? (
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-slate-600 hover:text-slate-900"
+            >
+              Close
+            </button>
+          ) : null}
+        </div>
+
+        <p className="text-sm text-slate-600 mb-3">
+          {isSupported
+            ? isListening
+              ? 'Listening for voice commands...'
+              : 'Tap listen to start voice control.'
+            : 'Speech recognition is not supported in this browser.'}
+        </p>
+
+        <div className="rounded-2xl bg-slate-100 p-3 min-h-[4rem] text-slate-900">
+          {transcript || 'Waiting for speech input...'}
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={toggleListening}
+            className="rounded-full bg-slate-900 px-4 py-2 text-white"
+          >
+            {isListening ? 'Stop' : 'Listen'}
+          </button>
+          <button
+            type="button"
+            onClick={() => speak('How can I help you?')}
+            className="rounded-full border border-slate-300 px-4 py-2 text-slate-900"
+          >
+            Help
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default VoiceAssistant
