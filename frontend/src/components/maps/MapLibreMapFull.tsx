@@ -735,56 +735,49 @@ export function MapLibreMap({
         })
 
         // Determine color gradient based on analytics type
-        let colorGradient
-        
-        if (analyticsType === 'pricePrediction') {
-          // Price: Blue (low) → Red (high)
-          colorGradient = [
-            'interpolate',
-            ['linear'],
-            ['get', 'value'],
-            200,
-            '#3b82f6',     // Blue - low price
-            400,
-            '#60a5fa',
-            600,
-            '#fbbf24',     // Amber - mid price
-            800,
-            '#f97316',
-            1000,
-            '#ef4444'      // Red - high price
-          ]
-        } else if (analyticsType === 'marketTrends') {
-          // Demand Index: Blue (low) → Red (high)
-          colorGradient = [
-            'interpolate',
-            ['linear'],
-            ['get', 'value'],
-            0,
-            '#3b82f6',     // Blue - low demand
-            5,
-            '#10b981',     // Green - medium demand
-            10,
-            '#ef4444'      // Red - high demand
-          ]
-        } else {
-          // Walkability & Neighborhood: Red (low) → Green (high)
-          colorGradient = [
-            'interpolate',
-            ['linear'],
-            ['get', 'value'],
-            0,
-            '#dc2626',     // Red - low score
-            25,
-            '#f97316',     // Orange
-            50,
-            '#eab308',     // Yellow
-            75,
-            '#84cc16',     // Lime
-            100,
-            '#10b981'      // Green - high score
-          ]
-        }
+        const colorGradient: Array<string | number | Array<string | number>> = analyticsType === 'pricePrediction'
+          ? [
+              'interpolate',
+              ['linear'],
+              ['get', 'value'],
+              200,
+              '#3b82f6',
+              400,
+              '#60a5fa',
+              600,
+              '#fbbf24',
+              800,
+              '#f97316',
+              1000,
+              '#ef4444',
+            ]
+          : analyticsType === 'marketTrends'
+            ? [
+                'interpolate',
+                ['linear'],
+                ['get', 'value'],
+                0,
+                '#3b82f6',
+                5,
+                '#10b981',
+                10,
+                '#ef4444',
+              ]
+            : [
+                'interpolate',
+                ['linear'],
+                ['get', 'value'],
+                0,
+                '#dc2626',
+                25,
+                '#f97316',
+                50,
+                '#eab308',
+                75,
+                '#84cc16',
+                100,
+                '#10b981',
+              ]
 
         // Add analytics heatmap layer
         addLayer({
