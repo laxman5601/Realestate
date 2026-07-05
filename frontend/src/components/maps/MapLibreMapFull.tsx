@@ -803,7 +803,7 @@ export function MapLibreMap({
               20,
               2
             ],
-            'heatmap-color': colorGradient,
+            'heatmap-color': colorGradient as any,
             'heatmap-radius': [
               'interpolate',
               ['linear'],
