@@ -116,7 +116,7 @@ export function MapLibreMap({
 
     // Create GeoJSON from clustered properties
     const bounds = map.getBounds()
-    const bbox = [
+    const bbox: [number, number, number, number] = [
       bounds.getWest(),
       bounds.getSouth(),
       bounds.getEast(),
