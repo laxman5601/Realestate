@@ -74,7 +74,8 @@ export function MapLibreMap({
 
   // Initialize clustering with mobile optimizations
   useEffect(() => {
-    if (!properties.length) return
+    const safeProperties = properties ?? []
+    if (!safeProperties.length) return
 
     const supercluster = new Supercluster({
       radius: isMobile ? 60 : 40, // Larger clusters on mobile for performance
@@ -83,7 +84,7 @@ export function MapLibreMap({
     })
 
     // Create features from properties
-    const features = properties.map((prop) => ({
+    const features = safeProperties.map((prop) => ({
       geometry: {
         coordinates: [prop.longitude, prop.latitude],
         type: 'Point' as const,
@@ -255,8 +256,10 @@ export function MapLibreMap({
 
     if (shouldShow) {
       try {
+        const safeProperties = properties ?? []
+
         // Create heatmap data from properties
-        const features = properties.map((prop) => ({
+        const features = safeProperties.map((prop) => ({
           type: 'Feature' as const,
           geometry: {
             type: 'Point' as const,
