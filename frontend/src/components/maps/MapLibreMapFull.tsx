@@ -590,15 +590,8 @@ export function MapLibreMap({
             type: 'symbol',
             source: 'transit-source',
             layout: {
-              'text-field': showTransitDistance 
-                ? ['format',
-                    ['get', 'name'], { 'text-transform': 'uppercase' },
-                    '\n',
-                    ['concat', 
-                      ['get', 'walkTime'], 
-                      ' min'
-                    ], { 'font-scale': 0.8 }
-                  ]
+              'text-field': showTransitDistance
+                ? ['concat', ['get', 'name'], '\n', ['get', 'walkTime'], ' min']
                 : ['get', 'name'],
               'text-font': ['Open Sans Regular'],
               'text-size': 10,
