@@ -13,9 +13,9 @@ interface MapContextType {
   map: maplibregl.Map | null
   isLoaded: boolean
   addMarker: (lngLat: [number, number], popup?: string) => void
-  addLayer: (layer: maplibregl.AnyLayer, beforeId?: string) => void
+  addLayer: (layer: Record<string, unknown>, beforeId?: string) => void
   removeLayer: (id: string) => void
-  addSource: (id: string, source: maplibregl.SourceSpecification) => void
+  addSource: (id: string, source: Record<string, unknown>) => void
   removeSource: (id: string) => void
 }
 
@@ -97,7 +97,7 @@ export function MapLibreProvider({
         marker.setPopup(new maplibregl.Popup().setText(popup))
       }
     },
-    addLayer: (layer: maplibregl.AnyLayer, beforeId?: string) => {
+    addLayer: (layer: Record<string, unknown>, beforeId?: string) => {
       if (!mapRef.current) return
       mapRef.current.addLayer(layer, beforeId)
     },
@@ -109,7 +109,7 @@ export function MapLibreProvider({
         console.warn(`Layer ${id} not found`)
       }
     },
-    addSource: (id: string, source: maplibregl.SourceSpecification) => {
+    addSource: (id: string, source: Record<string, unknown>) => {
       if (!mapRef.current) return
       try {
         mapRef.current.addSource(id, source)
