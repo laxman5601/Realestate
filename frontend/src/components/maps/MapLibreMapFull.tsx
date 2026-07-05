@@ -625,8 +625,15 @@ export function MapLibreMap({
                 const distanceText = distance ? `Distance: ${formatDistance(distance)}` : ''
                 const walkTimeText = walkTime ? `Walk Time: ${formatWalkTime(walkTime)}` : ''
                 
-                const popup = new maplibregl.Popup({ offset: 25 })
-                  .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
+                const geometry = feature.geometry
+              const coordinates = geometry.type === 'Point' && Array.isArray(geometry.coordinates)
+                ? geometry.coordinates
+                : null
+
+              if (!coordinates || coordinates.length < 2) return
+
+              const popup = new maplibregl.Popup({ offset: 25 })
+                  .setLngLat([coordinates[0], coordinates[1]])
                   .setHTML(
                     `<div class="p-2">
                       <h3 class="font-semibold text-sm mb-1">${name}</h3>
@@ -866,8 +873,15 @@ export function MapLibreMap({
                 : analyticsType === 'marketTrends' ? 'Demand Index'
                 : 'Score'
               
+              const geometry = feature.geometry
+              const coordinates = geometry.type === 'Point' && Array.isArray(geometry.coordinates)
+                ? geometry.coordinates
+                : null
+
+              if (!coordinates || coordinates.length < 2) return
+
               const popup = new maplibregl.Popup({ offset: 25 })
-                .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
+                .setLngLat([coordinates[0], coordinates[1]])
                 .setHTML(
                   `<div class="p-2">
                     <p class="font-semibold text-sm mb-1">${categoryLabel}</p>
