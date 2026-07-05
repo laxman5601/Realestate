@@ -378,11 +378,12 @@ export function MapLibreMap({
         const longitude = center.lng
 
         // Call real API for isochrone calculation
+        const isochroneTravelMode: 'driving' | 'transit' | 'walking' = 'driving'
         const isochroneData = await apiClient.calculateIsochrone(
           latitude,
           longitude,
           isochroneTime,
-          isochroneMode
+          isochroneTravelMode
         )
 
         // Transform API response to GeoJSON
