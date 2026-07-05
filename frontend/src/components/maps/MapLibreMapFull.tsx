@@ -85,6 +85,7 @@ export function MapLibreMap({
 
     // Create features from properties
     const features = safeProperties.map((prop) => ({
+      type: 'Feature' as const,
       geometry: {
         coordinates: [prop.longitude, prop.latitude],
         type: 'Point' as const,
