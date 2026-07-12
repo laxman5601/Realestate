@@ -84,10 +84,9 @@ const AdvancedMobileInterface: React.FC<AdvancedMobileInterfaceProps> = ({
     switch (gesture.type) {
       case 'pinch':
         // Handle zoom gestures
-        if (gesture.scale > 1) {
-          mapStore.setZoom(mapStore.zoom + 0.5)
-        } else {
-          mapStore.setZoom(mapStore.zoom - 0.5)
+        if (gesture.scale && mapStore.viewport) {
+          const newZoom = Math.max(1, Math.min(20, mapStore.viewport.zoom + (gesture.scale > 1 ? 0.5 : -0.5)))
+          mapStore.setViewport({ zoom: newZoom })
         }
         break
 
@@ -110,7 +109,9 @@ const AdvancedMobileInterface: React.FC<AdvancedMobileInterfaceProps> = ({
 
       case 'double-tap':
         // Handle double tap for zoom in
-        mapStore.setZoom(mapStore.zoom + 1)
+        if (mapStore.viewport) {
+          mapStore.setViewport({ zoom: Math.min(20, mapStore.viewport.zoom + 1) })
+        }
         triggerHapticFeedback('light')
         break
 
@@ -138,7 +139,7 @@ const AdvancedMobileInterface: React.FC<AdvancedMobileInterfaceProps> = ({
 
       case 'zoom':
         if (command.level) {
-          mapStore.setZoom(command.level)
+          mapStore.setViewport({ zoom: command.level })
         }
         break
 
