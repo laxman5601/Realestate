@@ -41,7 +41,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   // Check if speech recognition is supported
   useEffect(() => {
     const checkSupport = () => {
-      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
       const speechSynthesis = 'speechSynthesis' in window
 
       setIsSupported(!!SpeechRecognition && speechSynthesis)
