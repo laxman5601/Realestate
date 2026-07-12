@@ -174,6 +174,7 @@ const AdvancedGestures: React.FC<AdvancedGesturesProps> = ({
       }
 
       const updatedTouches = [...prev.touches]
+      const startTouches = prev.startTouches
 
       // Update existing touches
       newTouches.forEach(newTouch => {
@@ -185,8 +186,6 @@ const AdvancedGestures: React.FC<AdvancedGesturesProps> = ({
 
       // Handle gestures
       if (updatedTouches.length >= 2 && enableMultiTouch) {
-        const startTouches = prev.startTouches
-
         if (startTouches.length >= 2) {
           // Pinch gesture
           if (enablePinch) {
@@ -233,13 +232,18 @@ const AdvancedGestures: React.FC<AdvancedGesturesProps> = ({
         }
       }
 
+      const newScale = updatedTouches.length >= 2 && startTouches.length >= 2
+        ? getDistance(updatedTouches[0], updatedTouches[1]) / getDistance(startTouches[0], startTouches[1])
+        : 1
+      const newRotation = updatedTouches.length >= 2 && startTouches.length >= 2
+        ? (getAngle(updatedTouches[0], updatedTouches[1]) - getAngle(startTouches[0], startTouches[1])) * (180 / Math.PI)
+        : 0
+
       return {
         ...prev,
         touches: updatedTouches,
-        scale: updatedTouches.length >= 2 ?
-          getDistance(updatedTouches[0], updatedTouches[1]) / getDistance(startTouches[0], startTouches[1]) : 1,
-        rotation: updatedTouches.length >= 2 ?
-          (getAngle(updatedTouches[0], updatedTouches[1]) - getAngle(startTouches[0], startTouches[1])) * (180 / Math.PI) : 0
+        scale: newScale,
+        rotation: newRotation
       }
     })
   }, [touchesToPoints, getDistance, getAngle, enablePinch, enableRotate, enablePan, enableMultiTouch, onGesture])
