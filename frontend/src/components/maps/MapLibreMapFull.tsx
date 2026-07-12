@@ -735,7 +735,7 @@ export function MapLibreMap({
         })
 
         // Determine color gradient based on analytics type
-        const colorGradient: maplibregl.ExpressionSpecification = analyticsType === 'pricePrediction'
+        const colorGradient = analyticsType === 'pricePrediction'
           ? [
               'interpolate',
               ['linear'],
@@ -779,6 +779,8 @@ export function MapLibreMap({
                 '#10b981',
               ] as const
 
+        const heatmapColorGradient = colorGradient as unknown as maplibregl.ExpressionSpecification
+
         // Add analytics heatmap layer
         addLayer({
           id: 'analytics-heatmap',
@@ -803,7 +805,7 @@ export function MapLibreMap({
               20,
               2
             ],
-            'heatmap-color': colorGradient,
+            'heatmap-color': heatmapColorGradient,
             'heatmap-radius': [
               'interpolate',
               ['linear'],
