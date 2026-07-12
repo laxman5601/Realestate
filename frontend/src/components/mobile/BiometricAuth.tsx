@@ -63,7 +63,7 @@ const BiometricAuth: React.FC<BiometricAuthProps> = ({
       }))
 
       // Get available authenticators
-      const authenticators = []
+      const authenticators: string[] = []
       if (available) authenticators.push('platform')
       if (uvpa) authenticators.push('conditional')
 
