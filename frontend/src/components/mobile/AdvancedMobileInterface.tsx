@@ -133,7 +133,10 @@ const AdvancedMobileInterface: React.FC<AdvancedMobileInterfaceProps> = ({
 
       case 'navigate':
         if (command.location) {
-          mapStore.setCenter([command.location.lng, command.location.lat])
+          mapStore.setViewport({
+            latitude: command.location.lat,
+            longitude: command.location.lng,
+          })
         }
         break
 
