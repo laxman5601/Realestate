@@ -51,10 +51,12 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   }, [])
 
   // Initialize speech recognition
+  const getSpeechRecognition = () => (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+
   const initializeRecognition = useCallback(() => {
     if (!isSupported) return
 
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition
+    const SpeechRecognition = getSpeechRecognition()
 
     if (recognitionRef.current) {
       recognitionRef.current.abort()
