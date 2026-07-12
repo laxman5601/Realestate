@@ -32,7 +32,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   const [transcript, setTranscript] = useState('')
   const [isSupported, setIsSupported] = useState(false)
 
-  const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const recognitionRef = useRef<any>(null)
   const synthRef = useRef<SpeechSynthesis | null>(null)
 
   const { setViewport } = useMapStore()
