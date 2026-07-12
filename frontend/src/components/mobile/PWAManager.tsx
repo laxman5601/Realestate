@@ -294,20 +294,7 @@ const PWAManager: React.FC<PWAManagerProps> = ({
     }
   }, [registration])
 
-  return {
-    ...pwaState,
-    registration,
-    requestBackgroundSync,
-    requestNotificationPermission,
-    sendNotification,
-    shareContent,
-    getAppShortcuts,
-    addToContentIndex,
-    getCacheInfo,
-    clearAllCaches,
-    updateApp,
-    isPWASupported: isPWASupported()
-  }
+  return null
 }
 
 export default PWAManager
