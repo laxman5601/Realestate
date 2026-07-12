@@ -379,7 +379,7 @@ const OfflineMapManager: React.FC<OfflineMapManagerProps> = ({
       : [Math.max(8, zoom - 3), Math.min(18, zoom + 3)]
 
     downloadTilesForRegion(regionId, bounds, zoomLevels)
-  }, [mapInstance, downloadTilesForRegion])
+  }, [map, downloadTilesForRegion])
 
   // Get region for current location
   const getRegionForLocation = useCallback((lngLat: LngLat, radiusKm: number = 5) => {
