@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import maplibregl, { LngLatBounds, LngLat } from 'maplibre-gl'
+import { LngLatBounds, LngLat } from 'maplibre-gl'
 import { isMobileDevice } from '@/lib/mobileUtils'
 import { useMapLibre } from '@/components/maps/MapLibreProvider'
 
@@ -182,7 +182,7 @@ const OfflineMapManager: React.FC<OfflineMapManagerProps> = ({
         throw new Error('Map source not found')
       }
 
-      const tileSource = source as maplibregl.TileJSONSource
+      const tileSource = source as { tiles?: string[] }
       const tiles = tileSource.tiles ?? []
       const tileUrls: string[] = []
 
