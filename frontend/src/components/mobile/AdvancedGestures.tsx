@@ -94,8 +94,9 @@ const AdvancedGestures: React.FC<AdvancedGesturesProps> = ({
   }, [])
 
   // Convert TouchEvent to TouchPoint array
-  const touchesToPoints = useCallback((touches: TouchList): TouchPoint[] => {
-    return Array.from(touches).map(touch => ({
+  const touchesToPoints = useCallback((touches: TouchList | React.TouchList): TouchPoint[] => {
+    const touchArray = Array.from(touches as unknown as Iterable<Touch>)
+    return touchArray.map(touch => ({
       id: touch.identifier,
       x: touch.clientX,
       y: touch.clientY,
