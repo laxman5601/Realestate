@@ -396,8 +396,7 @@ export const useSearchStore = create<SearchStore>((set, get) => ({
     const smartFilters: PropertyFilter = {
       ...state.filters,
       // Add smart defaults based on user location and preferences
-      maxDistance: 10, // 10km radius
-      sortBy: 'distance'
+      radiusKm: 10,
     }
 
     set({ filters: smartFilters })

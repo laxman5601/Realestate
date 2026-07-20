@@ -127,14 +127,21 @@ export function MapLibreMap({
     const clusters = cluster.getClusters(bbox, zoom)
 
     // Create GeoJSON feature collection
-    const features = clusters.map((cluster: { properties?: Record<string, unknown>; geometry: { coordinates: [number, number] } }) => {
+    const features = clusters.map((cluster: {
+      properties?: Record<string, unknown> & { cluster?: boolean }
+      geometry: {
+        coordinates: GeoJSON.Position
+      }
+    }) => {
+      const coordinates = cluster.geometry.coordinates.slice(0, 2) as [number, number]
+
       if (cluster.properties?.cluster) {
         // Clustered group
         return {
           type: 'Feature' as const,
           geometry: {
             type: 'Point' as const,
-            coordinates: cluster.geometry.coordinates,
+            coordinates,
           },
           properties: {
             ...cluster.properties,
@@ -147,7 +154,7 @@ export function MapLibreMap({
           type: 'Feature' as const,
           geometry: {
             type: 'Point' as const,
-            coordinates: cluster.geometry.coordinates,
+            coordinates,
           },
           properties: {
             ...cluster.properties,
@@ -229,7 +236,7 @@ export function MapLibreMap({
 
       // Add click handler for individual properties
       if (onPropertyClick) {
-        map.on('click', 'property-markers', (e: maplibregl.MapMouseEvent) => {
+        map.on('click', 'property-markers', (e: any) => {
           const feature = e.features?.[0]
           if (feature?.properties?.id) {
             onPropertyClick(feature.properties.id)
@@ -608,7 +615,7 @@ export function MapLibreMap({
 
           // Add click handler for transit stations
           if (map) {
-            map.on('click', 'transit-layer', (e: maplibregl.MapMouseEvent) => {
+            map.on('click', 'transit-layer', (e: any) => {
               const feature = e.features?.[0]
               if (feature?.properties) {
                 const { name, type, distance, walkTime, routes } = feature.properties
@@ -861,7 +868,7 @@ export function MapLibreMap({
 
         // Add click handler for analytics points
         if (map) {
-          map.on('click', 'analytics-heatmap', (e: maplibregl.MapMouseEvent) => {
+          map.on('click', 'analytics-heatmap', (e: any) => {
             const feature = e.features?.[0]
             if (feature?.properties) {
               const { value } = feature.properties
