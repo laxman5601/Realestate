@@ -32,7 +32,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   const [transcript, setTranscript] = useState('')
   const [isSupported, setIsSupported] = useState(false)
 
-  const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const recognitionRef = useRef<any>(null)
   const synthRef = useRef<SpeechSynthesis | null>(null)
 
   const { setViewport } = useMapStore()
@@ -41,7 +41,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   // Check if speech recognition is supported
   useEffect(() => {
     const checkSupport = () => {
-      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
       const speechSynthesis = 'speechSynthesis' in window
 
       setIsSupported(!!SpeechRecognition && speechSynthesis)
@@ -51,10 +51,12 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   }, [])
 
   // Initialize speech recognition
+  const getSpeechRecognition = () => (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+
   const initializeRecognition = useCallback(() => {
     if (!isSupported) return
 
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition
+    const SpeechRecognition = getSpeechRecognition()
 
     if (recognitionRef.current) {
       recognitionRef.current.abort()

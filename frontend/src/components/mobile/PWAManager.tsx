@@ -174,8 +174,13 @@ const PWAManager: React.FC<PWAManagerProps> = ({
   const requestBackgroundSync = useCallback(async (tag: string) => {
     if (!registration) return false
 
+    const syncManager = (registration as ServiceWorkerRegistration & { sync?: { register: (tag: string) => Promise<void> } }).sync
+    if (!syncManager?.register) {
+      return false
+    }
+
     try {
-      await registration.sync.register(tag)
+      await syncManager.register(tag)
       return true
     } catch (error) {
       console.error('Background sync not supported:', error)
@@ -294,20 +299,7 @@ const PWAManager: React.FC<PWAManagerProps> = ({
     }
   }, [registration])
 
-  return {
-    ...pwaState,
-    registration,
-    requestBackgroundSync,
-    requestNotificationPermission,
-    sendNotification,
-    shareContent,
-    getAppShortcuts,
-    addToContentIndex,
-    getCacheInfo,
-    clearAllCaches,
-    updateApp,
-    isPWASupported: isPWASupported()
-  }
+  return null
 }
 
 export default PWAManager
