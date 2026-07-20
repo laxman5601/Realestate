@@ -1,13 +1,9 @@
 FROM node:20-slim AS deps
 WORKDIR /app
 COPY package*.json ./
-# Prefer `npm ci` for reproducible builds when lockfile exists. Fall back to legacy peer deps otherwise.
-# Note: Keep dev dependencies in deps stage since Next.js build needs them (TypeScript, toolchain, etc)
-RUN if [ -f package-lock.json ]; then \
-      npm ci --ignore-scripts --no-audit --no-fund; \
-    else \
-      npm install --legacy-peer-deps --no-audit --no-fund; \
-    fi
+# Use npm install in the container for better compatibility with the existing lockfile and legacy peer dependency resolution.
+# Keep dev dependencies in this stage because Next.js build needs the TypeScript/toolchain packages.
+RUN npm install --legacy-peer-deps --no-audit --no-fund
 
 FROM node:20-slim AS builder
 WORKDIR /app
