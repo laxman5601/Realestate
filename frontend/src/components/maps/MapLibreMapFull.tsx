@@ -127,7 +127,7 @@ export function MapLibreMap({
     const clusters = cluster.getClusters(bbox, zoom)
 
     // Create GeoJSON feature collection
-    const features: GeoJSON.Feature[] = clusters.map((cluster) => {
+    const features = clusters.map((cluster: { properties?: Record<string, unknown>; geometry: { coordinates: [number, number] } }) => {
       if (cluster.properties?.cluster) {
         // Clustered group
         return {
@@ -229,7 +229,7 @@ export function MapLibreMap({
 
       // Add click handler for individual properties
       if (onPropertyClick) {
-        map.on('click', 'property-markers', (e) => {
+        map.on('click', 'property-markers', (e: maplibregl.MapMouseEvent) => {
           const feature = e.features?.[0]
           if (feature?.properties?.id) {
             onPropertyClick(feature.properties.id)
@@ -608,7 +608,7 @@ export function MapLibreMap({
 
           // Add click handler for transit stations
           if (map) {
-            map.on('click', 'transit-layer', (e) => {
+            map.on('click', 'transit-layer', (e: maplibregl.MapMouseEvent) => {
               const feature = e.features?.[0]
               if (feature?.properties) {
                 const { name, type, distance, walkTime, routes } = feature.properties
@@ -675,16 +675,26 @@ export function MapLibreMap({
 
     const shouldShow = visibleLayers.analytics && analyticsType
 
-    if (shouldShow) {
+    if (!shouldShow) {
+      try {
+        removeLayer('analytics-heatmap')
+        removeLayer('analytics-labels')
+        removeSource('analytics-source')
+      } catch (e) {
+        // Layers might not exist
+      }
+      return
+    }
+
+    const loadAnalyticsData = async () => {
       try {
         const bounds = map.getBounds()
-        
-        // Generate analytics data based on selected type
+
         let analyticsData
-        
+
         switch (analyticsType) {
           case 'walkability':
-            analyticsData = generateWalkabilityHeatmap(
+            analyticsData = await generateWalkabilityHeatmap(
               bounds.getSouth(),
               bounds.getNorth(),
               bounds.getWest(),
@@ -692,7 +702,7 @@ export function MapLibreMap({
             )
             break
           case 'pricePrediction':
-            analyticsData = generatePricePredictionHeatmap(
+            analyticsData = await generatePricePredictionHeatmap(
               bounds.getSouth(),
               bounds.getNorth(),
               bounds.getWest(),
@@ -700,7 +710,7 @@ export function MapLibreMap({
             )
             break
           case 'marketTrends':
-            analyticsData = generateMarketTrendsHeatmap(
+            analyticsData = await generateMarketTrendsHeatmap(
               bounds.getSouth(),
               bounds.getNorth(),
               bounds.getWest(),
@@ -708,7 +718,7 @@ export function MapLibreMap({
             )
             break
           case 'neighborhood':
-            analyticsData = generateWalkabilityHeatmap(
+            analyticsData = await generateWalkabilityHeatmap(
               bounds.getSouth(),
               bounds.getNorth(),
               bounds.getWest(),
@@ -851,16 +861,16 @@ export function MapLibreMap({
 
         // Add click handler for analytics points
         if (map) {
-          map.on('click', 'analytics-heatmap', (e) => {
+          map.on('click', 'analytics-heatmap', (e: maplibregl.MapMouseEvent) => {
             const feature = e.features?.[0]
             if (feature?.properties) {
-              const { value, category } = feature.properties
-              
+              const { value } = feature.properties
+
               const categoryLabel = analyticsType === 'walkability' ? 'Walkability Score'
                 : analyticsType === 'pricePrediction' ? 'Price per Sq Ft'
                 : analyticsType === 'marketTrends' ? 'Demand Index'
                 : 'Score'
-              
+
               const geometry = feature.geometry
               const coordinates = geometry.type === 'Point' && Array.isArray(geometry.coordinates)
                 ? geometry.coordinates
@@ -890,16 +900,9 @@ export function MapLibreMap({
       } catch (e) {
         console.error('Error adding analytics layer:', e)
       }
-    } else {
-      // Remove analytics layers if not visible
-      try {
-        removeLayer('analytics-heatmap')
-        removeLayer('analytics-labels')
-        removeSource('analytics-source')
-      } catch (e) {
-        // Layers might not exist
-      }
     }
+
+    loadAnalyticsData()
   }, [map, isLoaded, visibleLayers.analytics, analyticsType, analyticsOpacity, showAnalyticsLabels])
 
   return null

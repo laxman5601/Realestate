@@ -337,8 +337,8 @@ export const useSearchStore = create<SearchStore>((set, get) => ({
         property.address,
         property.city,
         property.state,
-        property.propertyType,
-        property.neighborhood
+        property.type,
+        (property as Property & { neighborhood?: string }).neighborhood
       ].join(' ').toLowerCase()
 
       // Create index entries for each word

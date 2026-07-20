@@ -132,9 +132,9 @@ export function SearchFilters({ onClose }: { onClose?: () => void }) {
             <div>
               <label className="text-sm text-gray-600 mb-1 block">Min Bathrooms</label>
               <select
-                value={filters.minBedrooms || ''}
+                value={filters.minBathrooms || ''}
                 onChange={(e) =>
-                  updateFilter('minBedrooms', e.target.value ? Number(e.target.value) : undefined)
+                  updateFilter('minBathrooms', e.target.value ? Number(e.target.value) : undefined)
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >

@@ -341,19 +341,22 @@ export async function generateNeighborhoodScore(
 /**
  * Generate analytics grid data for heatmap visualization
  */
-export function generateAnalyticsGridData(
+export async function generateAnalyticsGridData(
   minLat: number,
   maxLat: number,
   minLon: number,
   maxLon: number,
   gridResolution: number = 0.01 // 0.01 degree ≈ 1km
-): AnalyticsGridPoint[] {
+): Promise<AnalyticsGridPoint[]> {
   const points: AnalyticsGridPoint[] = []
 
   for (let lat = minLat; lat <= maxLat; lat += gridResolution) {
     for (let lon = minLon; lon <= maxLon; lon += gridResolution) {
-      const walkability = generateWalkabilityScore(lat, lon)
-      const trends = generateMarketTrends(lat, lon)
+      const [walkability, trends, neighborhood] = await Promise.all([
+        generateWalkabilityScore(lat, lon),
+        generateMarketTrends(lat, lon),
+        generateNeighborhoodScore(lat, lon),
+      ])
 
       points.push({
         latitude: lat,
@@ -362,9 +365,7 @@ export function generateAnalyticsGridData(
         pricePerSqft: trends.averagePricePerSqft,
         marketTrend: trends.trend,
         demandIndex: trends.demandIndex,
-        neighborhoodGrade: getNeighborhoodGrade(
-          generateNeighborhoodScore(lat, lon).overallScore
-        ),
+        neighborhoodGrade: getNeighborhoodGrade(neighborhood.overallScore),
       })
     }
   }
@@ -375,13 +376,13 @@ export function generateAnalyticsGridData(
 /**
  * Generate walkability heatmap GeoJSON
  */
-export function generateWalkabilityHeatmap(
+export async function generateWalkabilityHeatmap(
   minLat: number,
   maxLat: number,
   minLon: number,
   maxLon: number
-): AnalyticsHeatmap {
-  const points = generateAnalyticsGridData(minLat, maxLat, minLon, maxLon, 0.02)
+): Promise<AnalyticsHeatmap> {
+  const points = await generateAnalyticsGridData(minLat, maxLat, minLon, maxLon, 0.02)
 
   return {
     type: 'FeatureCollection',
@@ -403,13 +404,13 @@ export function generateWalkabilityHeatmap(
 /**
  * Generate price prediction heatmap GeoJSON
  */
-export function generatePricePredictionHeatmap(
+export async function generatePricePredictionHeatmap(
   minLat: number,
   maxLat: number,
   minLon: number,
   maxLon: number
-): AnalyticsHeatmap {
-  const points = generateAnalyticsGridData(minLat, maxLat, minLon, maxLon, 0.02)
+): Promise<AnalyticsHeatmap> {
+  const points = await generateAnalyticsGridData(minLat, maxLat, minLon, maxLon, 0.02)
 
   return {
     type: 'FeatureCollection',
@@ -431,13 +432,13 @@ export function generatePricePredictionHeatmap(
 /**
  * Generate market trends heatmap GeoJSON
  */
-export function generateMarketTrendsHeatmap(
+export async function generateMarketTrendsHeatmap(
   minLat: number,
   maxLat: number,
   minLon: number,
   maxLon: number
-): AnalyticsHeatmap {
-  const points = generateAnalyticsGridData(minLat, maxLat, minLon, maxLon, 0.02)
+): Promise<AnalyticsHeatmap> {
+  const points = await generateAnalyticsGridData(minLat, maxLat, minLon, maxLon, 0.02)
 
   return {
     type: 'FeatureCollection',
