@@ -20,6 +20,27 @@ interface VoiceAssistantProps {
   onError?: (error: string) => void
 }
 
+interface SpeechRecognitionResultLike {
+  isFinal: boolean
+  transcript: string
+}
+
+interface SpeechRecognitionResultItemLike {
+  transcript: string
+}
+
+interface SpeechRecognitionEventLike {
+  resultIndex: number
+  results: Array<{
+    isFinal: boolean
+    [index: number]: SpeechRecognitionResultItemLike
+  }>
+}
+
+interface SpeechRecognitionErrorEventLike {
+  error: string
+}
+
 const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   onCommand,
   onClose,
@@ -74,7 +95,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       triggerHapticFeedback('light')
     }
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: SpeechRecognitionEventLike) => {
       let finalTranscript = ''
       let interimTranscript = ''
 
@@ -97,7 +118,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       }
     }
 
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    recognition.onerror = (event: SpeechRecognitionErrorEventLike) => {
       console.error('Speech recognition error:', event.error)
       setIsListening(false)
       onError?.(`Speech recognition error: ${event.error}`)
