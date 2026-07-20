@@ -220,15 +220,15 @@ export const useSearchStore = create<SearchStore>((set, get) => ({
       }
 
       if (result.entities.propertyType) {
-        newFilters.propertyType = result.entities.propertyType
+        newFilters.propertyTypes = [result.entities.propertyType]
       }
 
       if (result.entities.bedrooms) {
-        newFilters.bedrooms = result.entities.bedrooms
+        newFilters.minBedrooms = result.entities.bedrooms
       }
 
       if (result.entities.bathrooms) {
-        newFilters.bathrooms = result.entities.bathrooms
+        newFilters.minBathrooms = result.entities.bathrooms
       }
 
       get().setFilters({ ...get().filters, ...newFilters })

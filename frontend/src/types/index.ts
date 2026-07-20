@@ -54,6 +54,8 @@ export interface PropertyFilter {
   maxPrice?: number
   minBedrooms?: number
   maxBedrooms?: number
+  minBathrooms?: number
+  maxBathrooms?: number
   minArea?: number
   maxArea?: number
   propertyTypes?: string[]

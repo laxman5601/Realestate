@@ -298,12 +298,12 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
         break
 
       case 'search_type':
-        setFilters({ propertyType: voiceCommand.parameters.propertyType })
+        setFilters({ propertyTypes: [voiceCommand.parameters.propertyType] })
         await search()
         break
 
       case 'search_bedrooms':
-        setFilters({ bedrooms: voiceCommand.parameters.bedrooms })
+        setFilters({ minBedrooms: voiceCommand.parameters.bedrooms })
         await search()
         break
 
