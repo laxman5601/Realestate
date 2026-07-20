@@ -139,7 +139,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
   }, [])
 
   // Speak text
-  const speak = useCallback((text: string, options: SpeechSynthesisUtterance = {}) => {
+  const speak = useCallback((text: string, options: Partial<SpeechSynthesisUtterance> = {}) => {
     if (!synthRef.current) return
 
     // Cancel any ongoing speech
