@@ -10,7 +10,7 @@ const insights = [
     subtitle: 'Trust scores based on delivery history and buyer reviews.',
   },
   {
-    icon: TrendUp,
+    icon: TrendingUp,
     title: 'Area Growth Score',
     value: '9 / 10',
     subtitle: 'Evaluate neighborhoods with data-driven development forecasts.',
