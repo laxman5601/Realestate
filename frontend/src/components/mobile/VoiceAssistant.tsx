@@ -74,7 +74,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       triggerHapticFeedback('light')
     }
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       let finalTranscript = ''
       let interimTranscript = ''
 
@@ -97,7 +97,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({
       }
     }
 
-    recognition.onerror = (event) => {
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error('Speech recognition error:', event.error)
       setIsListening(false)
       onError?.(`Speech recognition error: ${event.error}`)
